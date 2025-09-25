@@ -100,7 +100,7 @@ function App() {
             <div className="flex items-center">
               <div className="flex items-center space-x-3">
                 <img src="/logo.png" alt="TYRC Logo" className="h-10 w-10 object-contain" />
-                <h1 className="text-xl font-bold text-club-black">TYRC</h1>
+                <h1 className="text-xl font-bold text-club-black">Titan Rugby</h1>
               </div>
             </div>
             <div className="hidden md:block">
@@ -174,15 +174,15 @@ function App() {
         ></div>
         
         {/* Clean overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-club-black/90 via-club-black/75 to-club-red-dark/30"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-club-red-dark/20 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-club-black/90 via-club-black/75 "></div>
+        <div className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
-              Tenderloin Youth
+              Tenderloin Titan
               <span className="block text-club-silver">
-                Rugby <span className="text-club-red-accent">Club</span>
+                Youth <span className="text-club-red-accent">Rugby</span> Club
               </span>
             </h1>
             <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
@@ -205,7 +205,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-club-black mb-4">
-              About <span className="text-club-red-accent">TYRC</span>
+              About <span className="text-club-red-accent">Titan Rugby</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Founded in the heart of San Francisco's Tenderloin district, we're dedicated to providing 
