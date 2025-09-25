@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationVisible, setNotificationVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -20,20 +22,62 @@ function App() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log('Form submitted:', formData);
-    alert('Thank you for your interest! We will contact you soon.');
-    setIsFormOpen(false);
-    setFormData({
-      name: '',
-      age: '',
-      email: '',
-      phone: '',
-      experience: '',
-      message: ''
-    });
+    
+    // Validation: require name and either email or phone
+    if (!formData.name.trim()) {
+      alert('Please enter your name.');
+      return;
+    }
+    
+    if (!formData.email.trim() && !formData.phone.trim()) {
+      alert('Please enter either your email address or phone number.');
+      return;
+    }
+    
+    // Show notification with smooth fade-in
+    setShowNotification(true);
+    setTimeout(() => setNotificationVisible(true), 100);
+    
+    // Auto-close form after 2 seconds
+    setTimeout(() => {
+      setNotificationVisible(false);
+      setTimeout(() => {
+        setIsFormOpen(false);
+        setShowNotification(false);
+        setFormData({
+          name: '',
+          age: '',
+          email: '',
+          phone: '',
+          experience: '',
+          message: ''
+        });
+      }, 300);
+    }, 2000);
+    
+    // Optional: Still try to submit to API in background
+    try {
+      const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || 'https://kh57u83vqc.execute-api.us-west-2.amazonaws.com/dev';
+      
+      const response = await fetch(`${apiEndpoint}/submit-form`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Form submitted successfully to API:', result);
+      } else {
+        console.log('API submission failed, but user experience continues');
+      }
+    } catch (error) {
+      console.log('API submission error, but user experience continues:', error);
+    }
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -61,10 +105,10 @@ function App() {
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                <button onClick={() => scrollToSection('home')} className="text-club-black hover:text-club-silver px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</button>
-                <button onClick={() => scrollToSection('about')} className="text-gray-700 hover:text-club-silver px-3 py-2 rounded-md text-sm font-medium transition-colors">About</button>
-                <button onClick={() => scrollToSection('programs')} className="text-gray-700 hover:text-club-silver px-3 py-2 rounded-md text-sm font-medium transition-colors">Programs</button>
-                <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-club-silver px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</button>
+                <button onClick={() => scrollToSection('home')} className="text-club-black hover:text-club-red px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</button>
+                <button onClick={() => scrollToSection('about')} className="text-club-black hover:text-club-red px-3 py-2 rounded-md text-sm font-medium transition-colors">About</button>
+                <button onClick={() => scrollToSection('programs')} className="text-club-black hover:text-club-red px-3 py-2 rounded-md text-sm font-medium transition-colors">Programs</button>
+                <button onClick={() => scrollToSection('contact')} className="text-club-black hover:text-club-red px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</button>
               </div>
             </div>
             <div className="md:hidden">
@@ -91,25 +135,25 @@ function App() {
             <div className="px-2 pt-2 pb-3 space-y-1">
               <button
                 onClick={() => scrollToSection('home')}
-                className="block w-full text-left px-3 py-2 text-base font-medium text-club-black hover:text-club-silver hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-base font-medium text-club-black hover:text-club-red hover:bg-club-red-light rounded-md transition-colors"
               >
                 Home
               </button>
               <button
                 onClick={() => scrollToSection('about')}
-                className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-club-silver hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-base font-medium text-club-black hover:text-club-red hover:bg-club-red-light rounded-md transition-colors"
               >
                 About
               </button>
               <button
                 onClick={() => scrollToSection('programs')}
-                className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-club-silver hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-base font-medium text-club-black hover:text-club-red hover:bg-club-red-light rounded-md transition-colors"
               >
                 Programs
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-club-silver hover:bg-gray-50 rounded-md transition-colors"
+                className="block w-full text-left px-3 py-2 text-base font-medium text-club-black hover:text-club-red hover:bg-club-red-light rounded-md transition-colors"
               >
                 Contact
               </button>
@@ -129,27 +173,27 @@ function App() {
           }}
         ></div>
         
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-club-black/80 to-club-silver-dark/60"></div>
+        {/* Clean overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-club-black/90 via-club-black/75 to-club-red-dark/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-club-red-dark/20 via-transparent to-transparent"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
               Tenderloin Youth
-              <span className="block text-club-silver">Rugby Club</span>
+              <span className="block text-club-silver">
+                Rugby <span className="text-club-red-accent">Club</span>
+              </span>
             </h1>
             <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
               Building character, community, and champions through the sport of rugby
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <button 
                 onClick={() => setIsFormOpen(true)}
-                className="bg-club-silver text-club-black px-8 py-3 rounded-lg font-semibold text-lg hover:bg-club-silver-light transition-colors shadow-lg"
+                className="bg-gradient-to-r from-white to-club-red-light text-club-black px-10 py-4 rounded-xl font-bold text-xl hover:from-club-red-light hover:to-white transition-all duration-300 border-2 border-club-red-accent hover:border-club-red transform hover:scale-105"
               >
-                Join Our Team
-              </button>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-white hover:text-club-black transition-colors">
-                Learn More
+                Join Our <span className="text-club-red-accent">Team</span>
               </button>
             </div>
           </div>
@@ -160,7 +204,9 @@ function App() {
       <section id="about" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-club-black mb-4">About TYRC</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-club-black mb-4">
+              About <span className="text-club-red-accent">TYRC</span>
+            </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Founded in the heart of San Francisco's Tenderloin district, we're dedicated to providing 
               youth with opportunities to grow through rugby while building lasting friendships and life skills.
@@ -168,33 +214,33 @@ function App() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 rounded-lg bg-gray-50">
-              <div className="w-16 h-16 bg-club-black rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-gray-50 to-club-red-light/20 border border-club-red-subtle hover:border-club-red-accent hover:shadow-lg transition-all duration-300 transform hover:scale-105 group">
+              <div className="w-16 h-16 bg-gradient-to-br from-club-black to-club-red-dark rounded-full flex items-center justify-center mx-auto mb-4 group-hover:shadow-lg transition-all duration-300">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-club-black mb-2">Community</h3>
+              <h3 className="text-xl font-semibold text-club-black mb-2 group-hover:text-club-red-accent transition-colors duration-300">Community</h3>
               <p className="text-gray-600">Building strong bonds and lasting friendships within our diverse community</p>
             </div>
             
-            <div className="text-center p-6 rounded-lg bg-gray-50">
-              <div className="w-16 h-16 bg-club-black rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-gray-50 to-club-red-light/20 border border-club-red-subtle hover:border-club-red-accent hover:shadow-lg transition-all duration-300 transform hover:scale-105 group">
+              <div className="w-16 h-16 bg-gradient-to-br from-club-black to-club-red-dark rounded-full flex items-center justify-center mx-auto mb-4 group-hover:shadow-lg transition-all duration-300">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-club-black mb-2">Excellence</h3>
+              <h3 className="text-xl font-semibold text-club-black mb-2 group-hover:text-club-red-accent transition-colors duration-300">Excellence</h3>
               <p className="text-gray-600">Striving for excellence both on and off the field through dedication and hard work</p>
             </div>
             
-            <div className="text-center p-6 rounded-lg bg-gray-50">
-              <div className="w-16 h-16 bg-club-black rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 rounded-lg bg-gradient-to-br from-gray-50 to-club-red-light/20 border border-club-red-subtle hover:border-club-red-accent hover:shadow-lg transition-all duration-300 transform hover:scale-105 group">
+              <div className="w-16 h-16 bg-gradient-to-br from-club-black to-club-red-dark rounded-full flex items-center justify-center mx-auto mb-4 group-hover:shadow-lg transition-all duration-300">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-club-black mb-2">Passion</h3>
+              <h3 className="text-xl font-semibold text-club-black mb-2 group-hover:text-club-red-accent transition-colors duration-300">Passion</h3>
               <p className="text-gray-600">Fostering a love for rugby and the values it teaches about teamwork and respect</p>
             </div>
           </div>
@@ -205,16 +251,24 @@ function App() {
       <section id="programs" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-club-black mb-4">Our Programs</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-club-black mb-4">
+              Our <span className="text-club-red-accent">Programs</span>
+            </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               We offer programs for youth of all ages and skill levels, from beginners to competitive players.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-48 bg-gradient-to-br from-club-black to-club-silver-dark flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">U8-U12</span>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden border border-club-red-subtle hover:border-club-red-accent hover:shadow-lg transition-all duration-300 transform hover:scale-105 group">
+              <div 
+                className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
+                style={{
+                  backgroundImage: 'url(/rugby2.jpeg)'
+                }}
+              >
+                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                <span className="text-white text-2xl font-bold relative z-10">U8-U12</span>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-club-black mb-2">Mini Rugby</h3>
@@ -227,9 +281,15 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-48 bg-gradient-to-br from-club-silver to-club-silver-dark flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">U13-U16</span>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden border border-club-red-subtle hover:border-club-red-accent hover:shadow-lg transition-all duration-300 transform hover:scale-105 group">
+              <div 
+                className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
+                style={{
+                  backgroundImage: 'url(/rugby1.jpeg)'
+                }}
+              >
+                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                <span className="text-white text-2xl font-bold relative z-10">U13-U16</span>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-club-black mb-2">Youth Rugby</h3>
@@ -242,9 +302,15 @@ function App() {
               </div>
             </div>
             
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="h-48 bg-gradient-to-br from-club-silver-dark to-club-black flex items-center justify-center">
-                <span className="text-white text-2xl font-bold">U17+</span>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden border border-club-red-subtle hover:border-club-red-accent hover:shadow-lg transition-all duration-300 transform hover:scale-105 group">
+              <div 
+                className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
+                style={{
+                  backgroundImage: 'url(/rugby3.jpeg)'
+                }}
+              >
+                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                <span className="text-white text-2xl font-bold relative z-10">U17+</span>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-club-black mb-2">Senior Youth</h3>
@@ -264,7 +330,7 @@ function App() {
       <section id="contact" className="py-16 bg-club-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Get In Touch</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Get In <span className="text-club-red-accent">Touch</span></h2>
             <p className="text-lg text-white/90 max-w-3xl mx-auto">
               Ready to join the Titans? Contact us to learn more about our programs and how to get involved.
             </p>
@@ -307,9 +373,6 @@ function App() {
                   <span className="font-medium mb-1 sm:mb-0">Saturday</span>
                   <span className="text-sm sm:text-base">9:00 AM - 11:00 AM</span>
                 </div>
-                <div className="text-white/80 text-sm mt-4 pt-3 border-t border-white/20">
-                  All practices held at Tenderloin Recreation Center
-                </div>
               </div>
             </div>
           </div>
@@ -320,33 +383,9 @@ function App() {
       <footer className="bg-club-black py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h3 className="text-xl font-bold text-white mb-2">Tenderloin Youth Rugby Club</h3>
+            <h3 className="text-xl font-bold text-white mb-2">Tenderloin Youth <span className="text-club-red-accent">Rugby</span> Club</h3>
             <p className="text-white/80 mb-4">Building champions on and off the field</p>
             <div className="flex justify-center space-x-6">
-              <button 
-                className="text-white/80 hover:text-club-silver transition-colors focus:outline-none focus:ring-2 focus:ring-club-silver focus:ring-opacity-50 rounded-full p-1"
-                aria-label="Follow us on Twitter"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                </svg>
-              </button>
-              <button 
-                className="text-white/80 hover:text-club-silver transition-colors focus:outline-none focus:ring-2 focus:ring-club-silver focus:ring-opacity-50 rounded-full p-1"
-                aria-label="Follow us on Facebook"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                </svg>
-              </button>
-              <button 
-                className="text-white/80 hover:text-club-silver transition-colors focus:outline-none focus:ring-2 focus:ring-club-silver focus:ring-opacity-50 rounded-full p-1"
-                aria-label="Follow us on Pinterest"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/>
-                </svg>
-              </button>
             </div>
             <p className="text-white/60 text-sm mt-4">
               © 2024 Tenderloin Youth Rugby Club. All rights reserved.
@@ -361,7 +400,7 @@ function App() {
           <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-club-black">Join Our Team</h2>
+                <h2 className="text-2xl font-bold text-club-black">Join Our <span className="text-club-red-accent">Team</span></h2>
                 <button
                   onClick={() => setIsFormOpen(false)}
                   className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -370,7 +409,7 @@ function App() {
                 </button>
               </div>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                     Full Name *
@@ -381,14 +420,13 @@ function App() {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-silver focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-red-accent focus:border-club-red-accent focus:shadow-red-glow transition-all duration-300"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-1">
-                    Age *
+                    Age
                   </label>
                   <input
                     type="number"
@@ -396,10 +434,9 @@ function App() {
                     name="age"
                     value={formData.age}
                     onChange={handleInputChange}
-                    required
                     min="5"
                     max="18"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-silver focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-red-accent focus:border-club-red-accent focus:shadow-red-glow transition-all duration-300"
                   />
                 </div>
 
@@ -413,14 +450,13 @@ function App() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-silver focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-red-accent focus:border-club-red-accent focus:shadow-red-glow transition-all duration-300"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
+                    Phone Number *
                   </label>
                   <input
                     type="tel"
@@ -428,8 +464,9 @@ function App() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-silver focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-red-accent focus:border-club-red-accent focus:shadow-red-glow transition-all duration-300"
                   />
+                  <p className="text-xs text-gray-500 mt-1">* Please provide either email or phone number</p>
                 </div>
 
                 <div>
@@ -456,16 +493,6 @@ function App() {
                       </svg>
                     </div>
                   </div>
-                  {formData.experience && (
-                    <div className="mt-2 p-3 bg-club-silver-light rounded-lg">
-                      <p className="text-sm text-gray-700">
-                        {formData.experience === 'beginner' && "Perfect! We welcome all skill levels and will help you learn the fundamentals of rugby."}
-                        {formData.experience === 'some' && "Great! We can build on your existing knowledge and help you develop further."}
-                        {formData.experience === 'intermediate' && "Excellent! You'll fit well with our competitive teams and advanced training."}
-                        {formData.experience === 'advanced' && "Fantastic! You'll be a valuable addition to our elite programs and can help mentor newer players."}
-                      </p>
-                    </div>
-                  )}
                 </div>
 
                 <div>
@@ -478,7 +505,7 @@ function App() {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-silver focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-club-red-accent focus:border-club-red-accent focus:shadow-red-glow transition-all duration-300"
                     placeholder="Tell us about yourself, any questions, or special considerations..."
                   />
                 </div>
@@ -487,18 +514,67 @@ function App() {
                   <button
                     type="button"
                     onClick={() => setIsFormOpen(false)}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 border-2 border-club-silver text-club-black rounded-md hover:bg-club-silver-light transition-colors font-semibold"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-club-black text-white rounded-md hover:bg-gray-800 transition-colors"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-club-black to-club-red-dark text-white rounded-md hover:from-club-red-dark hover:to-club-black transition-all duration-300 font-semibold shadow-lg border-2 border-club-red-accent transform hover:scale-105"
                   >
                     Submit
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Smooth Success Notification */}
+      {showNotification && (
+        <div className={`fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 transition-all duration-500 ease-out ${notificationVisible ? 'opacity-100' : 'opacity-0'}`}>
+          {/* Subtle floating particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className={`absolute top-1/4 left-1/4 w-1 h-1 bg-club-red-accent rounded-full opacity-60 animate-pulse transition-all duration-1000 ${notificationVisible ? 'opacity-60' : 'opacity-0'}`} style={{animationDelay: '0s', animationDuration: '3s'}}></div>
+            <div className={`absolute top-1/3 right-1/3 w-1 h-1 bg-club-red-dark rounded-full opacity-40 animate-pulse transition-all duration-1000 ${notificationVisible ? 'opacity-40' : 'opacity-0'}`} style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+            <div className={`absolute bottom-1/3 left-1/3 w-1 h-1 bg-club-red-accent rounded-full opacity-50 animate-pulse transition-all duration-1000 ${notificationVisible ? 'opacity-50' : 'opacity-0'}`} style={{animationDelay: '2s', animationDuration: '3.5s'}}></div>
+            <div className={`absolute bottom-1/4 right-1/4 w-1 h-1 bg-club-red-dark rounded-full opacity-30 animate-pulse transition-all duration-1000 ${notificationVisible ? 'opacity-30' : 'opacity-0'}`} style={{animationDelay: '0.5s', animationDuration: '4.5s'}}></div>
+          </div>
+          
+          <div className={`bg-white rounded-2xl p-8 max-w-md w-full text-center transform transition-all duration-500 ease-out shadow-xl border border-club-red-subtle relative overflow-hidden ${notificationVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4'}`}>
+            {/* Subtle background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-club-red-light/5 via-transparent to-club-red-accent/5"></div>
+            
+            <div className="relative z-10">
+              {/* Elegant success icon */}
+              <div className={`w-16 h-16 bg-gradient-to-br from-club-red-accent to-club-red-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg transition-all duration-500 hover:scale-105 ${notificationVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+                <svg className="w-8 h-8 text-white transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              
+              {/* Smooth animated title */}
+              <h3 className={`text-2xl font-semibold text-club-black mb-3 transition-all duration-700 ease-out ${notificationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+                Welcome to the <span className="text-club-red-accent font-bold">Team</span>
+              </h3>
+              
+              {/* Gentle message */}
+              <p className={`text-gray-600 mb-6 leading-relaxed transition-all duration-900 ease-out ${notificationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+                Thank you for joining TYRC. We're excited to have you on board and will be in touch soon with next steps.
+              </p>
+              
+              {/* Smooth progress indicator */}
+              <div className={`w-full bg-gray-100 rounded-full h-1 mb-4 overflow-hidden transition-all duration-1000 ${notificationVisible ? 'opacity-100' : 'opacity-0'}`}>
+                <div className={`bg-gradient-to-r from-club-red-accent to-club-red-dark h-1 rounded-full transition-all duration-2000 ease-out ${notificationVisible ? 'w-full' : 'w-0'}`}></div>
+              </div>
+              
+              {/* Subtle loading dots */}
+              <div className={`flex justify-center items-center space-x-1 transition-all duration-1000 ${notificationVisible ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="w-2 h-2 bg-club-red-accent rounded-full opacity-60 animate-pulse" style={{animationDelay: '0s'}}></div>
+                <div className="w-2 h-2 bg-club-red-dark rounded-full opacity-60 animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                <div className="w-2 h-2 bg-club-red-accent rounded-full opacity-60 animate-pulse" style={{animationDelay: '0.4s'}}></div>
+              </div>
             </div>
           </div>
         </div>

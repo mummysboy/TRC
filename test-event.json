@@ -1,0 +1,17 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /submit-form",
+  "rawPath": "/submit-form",
+  "rawQueryString": "",
+  "headers": {
+    "content-type": "application/json"
+  },
+  "requestContext": {
+    "http": {
+      "method": "POST",
+      "path": "/submit-form"
+    }
+  },
+  "body": "{\"name\":\"Test User\",\"age\":\"16\",\"email\":\"test@example.com\",\"phone\":\"555-1234\",\"experience\":\"beginner\",\"message\":\"Test message\"}",
+  "isBase64Encoded": false
+}
