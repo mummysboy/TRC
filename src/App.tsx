@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import rugby1 from './assets/rugby1.jpeg';
-import rugby2 from './assets/rugby2.jpeg';
-import rugby3 from './assets/rugby3.jpeg';
+// Using public folder images for better compatibility
 
 function App() {
   // rugby1 is now properly included in bundle
@@ -360,7 +358,7 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: `url(${rugby2})`,
+                  backgroundImage: 'url(/rugby2.jpeg)',
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
@@ -387,7 +385,7 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: `url(${rugby1})`,
+                  backgroundImage: 'url(/rugby1.jpeg)',
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
@@ -414,7 +412,7 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: `url(${rugby3})`,
+                  backgroundImage: 'url(/rugby3.jpeg)',
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
