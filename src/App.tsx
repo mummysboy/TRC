@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import rugby1 from './assets/rugby1.jpeg';
+import rugby2 from './assets/rugby2.jpeg';
+import rugby3 from './assets/rugby3.jpeg';
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -264,7 +267,7 @@ function App() {
               <div 
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: 'url(/rugby2.jpeg)'
+                  backgroundImage: `url(${rugby2})`
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
@@ -285,7 +288,7 @@ function App() {
               <div 
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: 'url(/rugby1.jpeg)'
+                  backgroundImage: `url(${rugby1})`
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
@@ -306,7 +309,7 @@ function App() {
               <div 
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: 'url(/rugby3.jpeg)'
+                  backgroundImage: `url(${rugby3})`
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
