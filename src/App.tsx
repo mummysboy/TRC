@@ -358,10 +358,10 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: 'url(/rugby2.jpeg)',
+                  backgroundImage: 'url(/rugby2.jpeg?v=1)',
                 }}
               >
-                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
                 <span className="text-white text-2xl font-bold relative z-10">
                   U8-U12
                 </span>
@@ -385,10 +385,10 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: 'url(/rugby1.jpeg)',
+                  backgroundImage: 'url(/rugby1.jpeg?v=2)',
                 }}
               >
-                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
                 <span className="text-white text-2xl font-bold relative z-10">
                   U13-U16
                 </span>
@@ -415,7 +415,7 @@ function App() {
                   backgroundImage: 'url(/rugby3.jpeg)',
                 }}
               >
-                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
                 <span className="text-white text-2xl font-bold relative z-10">
                   U17+
                 </span>
