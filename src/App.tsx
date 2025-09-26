@@ -360,7 +360,7 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: `url(${rugby1})`,
+                  backgroundImage: `url(${rugby2})`,
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
@@ -387,7 +387,7 @@ function App() {
               <div
                 className="h-48 bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
                 style={{
-                  backgroundImage: `url(${rugby1})`,
+                  backgroundImage: `url(${rugby3})`,
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
