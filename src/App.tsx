@@ -4,7 +4,7 @@ import rugby2 from './assets/rugby2.jpeg';
 import rugby3 from './assets/rugby3.jpeg';
 
 function App() {
-  console.log('rugby1:', rugby1); // Force import usage
+  // rugby1 is now properly included in bundle
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
